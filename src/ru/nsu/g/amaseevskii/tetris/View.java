@@ -9,18 +9,6 @@ import java.util.LinkedList;
 
 class View {
     private JFrame tetrisFrame;
-
-
-
-
-
-    boolean donealready = false;
-
-
-
-
-
-
     JFrame highscoresFrame;
     JFrame aboutFrame;
     JButton restart;
