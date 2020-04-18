@@ -25,12 +25,13 @@ class Controller {
             model.newGame();
             view.sidepanel.remove(view.gameOver);
             view.sidepanel.updateUI();
+            view.update_highscores();
             view.highscoresPanel.updateUI();
         });
 
         view.changelevel.addActionListener(actionEvent -> {
-            if (!model.internalpause)
-                model.internalpause();
+            if (!model.getInternalPauseStatus())
+                model.internalPause();
             int templevel;
             String option;
             option = JOptionPane.showInputDialog("Choose level from 1 to 30 (will change on restart)", model.startlevel);
@@ -40,18 +41,18 @@ class Controller {
                     model.startlevel = templevel;
             } catch (Exception e) {
             }
-            if (!model.gameOver)
-            model.internalpause();
+            if (!model.getGameOverStatus())
+            model.internalPause();
         });
 
         view.highscores.addActionListener(actionEvent ->
         {
-            if (!model.internalpause && !model.paused)
+            if (!model.getInternalPauseStatus() && !model.getPauseStatus())
             model.pause();
             view.highscoresFrame.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosing(WindowEvent e) {
-                    if (model.paused && !view.aboutFrame.isVisible())
+                    if (model.getPauseStatus() && !view.aboutFrame.isVisible())
                         model.pause();
                 }
             });
@@ -60,12 +61,12 @@ class Controller {
 
         view.about.addActionListener(actionEvent ->
         {
-            if (!model.internalpause && !model.paused)
+            if (!model.getInternalPauseStatus() && !model.getPauseStatus())
             model.pause();
             view.aboutFrame.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosing(WindowEvent e) {
-                    if (model.paused && !view.highscoresFrame.isVisible())
+                    if (model.getPauseStatus() && !view.highscoresFrame.isVisible())
                         model.pause();
                 }
             });
@@ -81,31 +82,32 @@ class Controller {
                 super.keyPressed(e);
                 switch (e.getKeyCode()) {
                     case (KeyEvent.VK_ESCAPE):
-                        if (!model.internalpause && !model.gameOver)
+                        if (!model.getInternalPauseStatus() && !model.getGameOverStatus())
                             model.pause();
                         break;
                     case (KeyEvent.VK_Z):
-                        if (!model.paused && !model.internalpause && !model.gameOver)
+                        if (!model.getPauseStatus() && !model.getInternalPauseStatus() && !model.getGameOverStatus())
                             model.rotate(false);
                         break;
                     case (KeyEvent.VK_X):
-                        if (!model.paused && !model.internalpause && !model.gameOver)
+                    case (KeyEvent.VK_UP):
+                        if (!model.getPauseStatus() && !model.getInternalPauseStatus() && !model.getGameOverStatus())
                             model.rotate(true);
                         break;
                     case (KeyEvent.VK_DOWN):
-                        if (!model.paused && !model.internalpause && !model.gameOver)
+                        if (!model.getPauseStatus() && !model.getInternalPauseStatus() && !model.getGameOverStatus())
                             model.movedown();
                         break;
                     case (KeyEvent.VK_LEFT):
-                        if (!model.paused && !model.internalpause && !model.gameOver)
+                        if (!model.getPauseStatus() && !model.getInternalPauseStatus() && !model.getGameOverStatus())
                             model.moveleft();
                         break;
                     case (KeyEvent.VK_RIGHT):
-                        if (!model.paused && !model.internalpause && !model.gameOver)
+                        if (!model.getPauseStatus() && !model.getInternalPauseStatus() && !model.getGameOverStatus())
                             model.moveright();
                         break;
                     case (KeyEvent.VK_SPACE):
-                        if (!model.paused && !model.internalpause && !model.gameOver)
+                        if (!model.getPauseStatus() && !model.getInternalPauseStatus() && !model.getGameOverStatus())
                             model.drop();
                         break;
                     default: {

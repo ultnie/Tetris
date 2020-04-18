@@ -19,7 +19,7 @@ class Model {
     private LinkedList<Color[]> prev_boarddata;
     Highscores highscores;
     String nickname;
-    boolean gameOver;
+    private boolean gameOver;
     private Timer stepTimer = null;
     private LinkedList<Integer> ids;
     private int id;
@@ -31,8 +31,8 @@ class Model {
     int counter;
     int goal;
     private int nextGoal;
-    boolean paused;
-    boolean internalpause;
+    private boolean paused;
+    private boolean internalpause;
     boolean highscoreset;
     private final int[] delay = {800, 717, 633, 550, 467, 383, 300, 217, 133, 100, 83, 83, 83, 67, 67, 67, 50, 50, 50, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 17};
     private final Position spawn = new Position(3, 0);
@@ -116,7 +116,7 @@ class Model {
                 nextid = ids.getFirst();
                 ids.removeFirst();
                 nextPiece = factory.getTetromino(nextid);
-                //прекратить игру, если топ-10, открыть окно, спросить ник и сделать запись очков в таблицу, закрыть окно
+
             } else {
                 stepTimer.stop();
                 if (highscores.records.size() < 10) {
@@ -171,7 +171,11 @@ class Model {
         }
     }
 
-    void internalpause() {
+    boolean getPauseStatus () {
+        return paused;
+    }
+
+    void internalPause() {
         if (!internalpause) {
             internalpause = true;
             stepTimer.stop();
@@ -179,6 +183,10 @@ class Model {
             internalpause = false;
             stepTimer.start();
         }
+    }
+
+    boolean getInternalPauseStatus () {
+        return internalpause;
     }
 
     void movedown() {
@@ -388,6 +396,10 @@ class Model {
                 if (coloredboard.get(i)[j] != null)
                     return true;
         return false;
+    }
+
+    boolean getGameOverStatus() {
+        return gameOver;
     }
 
     void getBoardData() {

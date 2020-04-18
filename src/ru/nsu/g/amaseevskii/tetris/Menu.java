@@ -17,12 +17,12 @@ class Menu {
         frame.setLocationRelativeTo(null);
 
         JFrame aboutFrame = new JFrame("About");
-        aboutFrame.setSize(600,220);
+        aboutFrame.setSize(630,250);
         aboutFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         JPanel aboutPanel = new JPanel();
         aboutPanel.setLayout(new BoxLayout(aboutPanel, BoxLayout.Y_AXIS));
         aboutPanel.setFocusable(false);
-        aboutPanel.setPreferredSize(new Dimension(200,200));
+        aboutPanel.setSize(630,250);
         JTextArea aboutTextArea = new JTextArea();
         aboutTextArea.setFont(new Font ("monospaced", Font.BOLD, 14));
         aboutTextArea.append("This is Tetris. Nothing more to say about it.\n\n" +
@@ -33,12 +33,12 @@ class Menu {
         aboutFrame.add(aboutTextArea);
 
         JFrame highscoresFrame = new JFrame("Highscores");
-        highscoresFrame.setSize(400, 400);
+        highscoresFrame.setSize(450, 550);
         highscoresFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         JPanel highscoresPanel = new JPanel();
         highscoresPanel.setLayout(new BoxLayout(highscoresPanel, BoxLayout.Y_AXIS));
         highscoresPanel.setFocusable(false);
-        highscoresPanel.setPreferredSize(new Dimension(200,200));
+        highscoresPanel.setSize(450,550);
         JTextArea highscoresTextArea = new JTextArea();
         highscoresTextArea.setFont(new Font ("monospaced", Font.BOLD, 16));
         for (int i = 0; i < highscores.records.size(); i++) {

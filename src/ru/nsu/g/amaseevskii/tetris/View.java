@@ -14,6 +14,7 @@ class View {
     JButton restart;
     JButton changelevel;
     JButton highscores;
+    JTextArea highscoresTextArea;
     JButton about;
     JButton exit;
     private Model model;
@@ -30,6 +31,7 @@ class View {
     View(Model model){
         tetrisFrame = new JFrame("Tetris");
         highscoresFrame = new JFrame("Highscores");
+        highscoresTextArea = null;
         aboutFrame = new JFrame("About");
         this.model = model;
     }
@@ -89,43 +91,52 @@ class View {
         tetrisFrame.setResizable(false);
         tetrisFrame.setVisible(true);
 
-        highscoresFrame.setSize(500, 320);
+        highscoresFrame.setSize(450, 550);
         highscoresFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         highscoresPanel = new JPanel();
-        highscoresPanel.setLayout(new BoxLayout(highscoresPanel, BoxLayout.Y_AXIS));
-        highscoresPanel.setFocusable(false);
-        highscoresPanel.setPreferredSize(new Dimension(200,200));
-        JTextArea highscores = new JTextArea();
-        highscores.setFont(new Font ("monospaced", Font.BOLD, 16));
-        for (int i = 0; i < model.highscores.records.size(); i++) {
-            if (i<9)
-                highscores.append((i+1)+".  "+model.highscores.records.get(i).getValue()
-                        +" ".repeat(11-model.highscores.records.get(i).getValue().length())
-                        +model.highscores.records.get(i).getKey()+"\n");
-            else
-                highscores.append((i+1)+". "+model.highscores.records.get(i).getValue()
-                        +" ".repeat(11-model.highscores.records.get(i).getValue().length())
-                        +model.highscores.records.get(i).getKey()+"\n");
-        }
-        highscores.append("\nIf you want to unpause the game and still\nsee highscores click on window with\nthe gameboard and press ESCAPE");
-        highscoresFrame.add(highscores);
+        highscoresPanel.setSize(450,550);
+        update_highscores();
 
-        aboutFrame.setSize(600,300);
+        aboutFrame.setSize(630,400);
         aboutFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         JPanel aboutPanel = new JPanel();
         aboutPanel.setLayout(new BoxLayout(aboutPanel, BoxLayout.Y_AXIS));
         aboutPanel.setFocusable(false);
-        aboutPanel.setPreferredSize(new Dimension(200,200));
+        aboutPanel.setSize(630,400);
         JTextArea aboutTextArea = new JTextArea();
         aboutTextArea.setFont(new Font ("monospaced", Font.BOLD, 14));
         aboutTextArea.append("This is Tetris. Nothing more to say about it.\n\n" +
-                "Controls:\nZ - Counter Clockwise Turn       X - Clockwise Turn\n" +
+                "Controls:\n" +
+                "Z - Counter Clockwise Turn       X/UP ARROW - Clockwise Turn\n" +
                 "DOWN ARROW - Soft Drop           LEFT/RIGHT ARROWS - Move Left/Right\n" +
                 "SPACE - Hard drop                ESCAPE - Pause/Unpause\n\n\n\n" +
                 "Made by Maseevsky Anton as a student task at NSU\n\n\n");
         aboutTextArea.append("If you want to see controls and play\njust click on window with\nthe gameboard and press ESCAPE");
         aboutFrame.add(aboutTextArea);
 
+    }
+
+    void update_highscores() {
+        if (highscoresTextArea == null) {
+            highscoresTextArea = new JTextArea();
+            highscoresTextArea.setPreferredSize(new Dimension(450,550));
+        }
+        else
+            highscoresTextArea.setText(null);
+        highscoresTextArea.setFont(new Font ("monospaced", Font.BOLD, 16));
+        for (int i = 0; i < model.highscores.records.size(); i++) {
+            if (i<9)
+                highscoresTextArea.append((i+1)+".  "+model.highscores.records.get(i).getValue()
+                        +" ".repeat(11-model.highscores.records.get(i).getValue().length())
+                        +model.highscores.records.get(i).getKey()+"\n");
+            else
+                highscoresTextArea.append((i+1)+". "+model.highscores.records.get(i).getValue()
+                        +" ".repeat(11-model.highscores.records.get(i).getValue().length())
+                        +model.highscores.records.get(i).getKey()+"\n");
+        }
+        highscoresTextArea.append("\nIf you want to unpause the game and still\nsee highscores click on window with\nthe gameboard and press ESCAPE");
+        highscoresPanel.add(highscoresTextArea);
+        highscoresFrame.add(highscoresPanel);
     }
 
     class TetrisPanel extends JPanel implements PropertyChangeListener {
@@ -162,13 +173,14 @@ class View {
         public void propertyChange(PropertyChangeEvent e) {
             tetris.board = (LinkedList<Color[]>) e.getNewValue();
 
-            if (model.gameOver) {
+            if (model.getGameOverStatus()) {
                 sidepanel.add(gameOver);
                 if (model.highscoreset) {
                     model.nickname = JOptionPane.showInputDialog("New highscore!\nIf you want to save it in a highscore table\nEnter you nickname (up to 10 characters) here");
-                    while (model.nickname.length() > 10) {
-                        model.nickname = JOptionPane.showInputDialog("Wow, that' a long nickname.\nSadly for the clean smooth table I had to make a limit.\nUp to 10 characters, please");
-                    }
+                    if (model.nickname != null && !model.nickname.isEmpty())
+                        while (model.nickname.length() > 10) {
+                            model.nickname = JOptionPane.showInputDialog("Wow, that' a long nickname.\nSadly for the clean smooth table I had to make a limit.\nUp to 10 characters, please");
+                        }
                 }
             }
             else {
