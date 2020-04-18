@@ -52,8 +52,7 @@ class Menu {
                         + highscores.records.get(i).getKey());
             }
         }
-        highscoresTextArea.append("\n\nThis window won't be updated if you\nwill set a highscore and click restart." +
-                "\nFor that you should use the one that\nopens from the window with gameboard");
+
         highscoresFrame.add(highscoresTextArea);
 
 
@@ -65,6 +64,8 @@ class Menu {
         start.addActionListener(actionEvent -> {
             tetris.start();
             frame.setVisible(false);
+            highscoresFrame.setVisible(false);
+            aboutFrame.setVisible(false);
         });
 
         JButton setlevel = new JButton("Set Level");
