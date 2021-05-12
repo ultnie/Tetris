@@ -25,8 +25,6 @@ class Controller {
             model.newGame();
             view.sidepanel.remove(view.gameOver);
             view.sidepanel.updateUI();
-            view.update_highscores();
-            view.highscoresPanel.updateUI();
         });
 
         view.changelevel.addActionListener(actionEvent -> {
@@ -45,20 +43,6 @@ class Controller {
             model.internalPause();
         });
 
-        view.highscores.addActionListener(actionEvent ->
-        {
-            if (!model.getInternalPauseStatus() && !model.getPauseStatus())
-            model.pause();
-            view.highscoresFrame.addWindowListener(new WindowAdapter() {
-                @Override
-                public void windowClosing(WindowEvent e) {
-                    if (model.getPauseStatus() && !view.aboutFrame.isVisible())
-                        model.pause();
-                }
-            });
-            view.highscoresFrame.setVisible(true);
-        });
-
         view.about.addActionListener(actionEvent ->
         {
             if (!model.getInternalPauseStatus() && !model.getPauseStatus())
@@ -66,7 +50,7 @@ class Controller {
             view.aboutFrame.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosing(WindowEvent e) {
-                    if (model.getPauseStatus() && !view.highscoresFrame.isVisible())
+                    if (model.getPauseStatus())
                         model.pause();
                 }
             });

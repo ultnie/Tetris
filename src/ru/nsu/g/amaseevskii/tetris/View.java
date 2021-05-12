@@ -9,12 +9,9 @@ import java.util.LinkedList;
 
 class View {
     private JFrame tetrisFrame;
-    JFrame highscoresFrame;
     JFrame aboutFrame;
     JButton restart;
     JButton changelevel;
-    JButton highscores;
-    JTextArea highscoresTextArea;
     JButton about;
     JButton exit;
     private Model model;
@@ -23,15 +20,12 @@ class View {
     private JLabel lines;
     private JLabel nextlvl;
     JPanel sidepanel;
-    JPanel highscoresPanel;
     TetrisPanel tetris;
     JLabel gameOver;
     private NextPiecePanel next;
 
     View(Model model){
         tetrisFrame = new JFrame("Tetris");
-        highscoresFrame = new JFrame("Highscores");
-        highscoresTextArea = null;
         aboutFrame = new JFrame("About");
         this.model = model;
     }
@@ -54,10 +48,6 @@ class View {
         changelevel.setFocusable(false);
         changelevel.setPreferredSize(new Dimension(60, 20));
 
-        highscores = new JButton("Highscores");
-        highscores.setFocusable(false);
-        highscores.setPreferredSize(new Dimension(60, 20));
-
         about = new JButton(("About"));
         about.setFocusable(false);
         about.setPreferredSize(new Dimension(60, 20));
@@ -76,7 +66,6 @@ class View {
         sidepanel.add(nextlvl);
         sidepanel.add(restart);
         sidepanel.add(changelevel);
-        sidepanel.add(highscores);
         sidepanel.add(about);
         sidepanel.add(exit);
         sidepanel.setPreferredSize(new Dimension(250,600));
@@ -88,14 +77,8 @@ class View {
         tetrisFrame.setSize(570,650);
         tetrisFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         tetrisFrame.setLocationRelativeTo(null);
-        tetrisFrame.setResizable(false);
+        tetrisFrame.setResizable(true);
         tetrisFrame.setVisible(true);
-
-        highscoresFrame.setSize(450, 550);
-        highscoresFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-        highscoresPanel = new JPanel();
-        highscoresPanel.setSize(450,550);
-        update_highscores();
 
         aboutFrame.setSize(630,400);
         aboutFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
@@ -116,29 +99,6 @@ class View {
 
     }
 
-    void update_highscores() {
-        if (highscoresTextArea == null) {
-            highscoresTextArea = new JTextArea();
-            highscoresTextArea.setPreferredSize(new Dimension(450,550));
-        }
-        else
-            highscoresTextArea.setText(null);
-        highscoresTextArea.setFont(new Font ("monospaced", Font.BOLD, 16));
-        for (int i = 0; i < model.highscores.records.size(); i++) {
-            if (i<9)
-                highscoresTextArea.append((i+1)+".  "+model.highscores.records.get(i).getValue()
-                        +" ".repeat(11-model.highscores.records.get(i).getValue().length())
-                        +model.highscores.records.get(i).getKey()+"\n");
-            else
-                highscoresTextArea.append((i+1)+". "+model.highscores.records.get(i).getValue()
-                        +" ".repeat(11-model.highscores.records.get(i).getValue().length())
-                        +model.highscores.records.get(i).getKey()+"\n");
-        }
-        highscoresTextArea.append("\nIf you want to unpause the game and still\nsee highscores click on window with\nthe gameboard and press ESCAPE");
-        highscoresPanel.add(highscoresTextArea);
-        highscoresFrame.add(highscoresPanel);
-    }
-
     class TetrisPanel extends JPanel implements PropertyChangeListener {
         int blocksize = 30;
         LinkedList<Color[]> board = new LinkedList<>();
@@ -156,6 +116,8 @@ class View {
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             Graphics2D graphics2D = (Graphics2D) g;
+            setPreferredSize(new Dimension ((tetrisFrame.getHeight()-50)/2, tetrisFrame.getHeight()-50));
+            blocksize = (tetrisFrame.getHeight()-50)/20;
             for (int i = 0; i < board.size(); i++) {
                 for (int j = 0; j < board.get(i).length; j++) {
                     graphics2D.setColor(Color.black);
@@ -175,13 +137,6 @@ class View {
 
             if (model.getGameOverStatus()) {
                 sidepanel.add(gameOver);
-                if (model.highscoreset) {
-                    model.nickname = JOptionPane.showInputDialog("New highscore!\nIf you want to save it in a highscore table\nEnter you nickname (up to 10 characters) here");
-                    if (model.nickname != null && !model.nickname.isEmpty())
-                        while (model.nickname.length() > 10) {
-                            model.nickname = JOptionPane.showInputDialog("Wow, that' a long nickname.\nSadly for the clean smooth table I had to make a limit.\nUp to 10 characters, please");
-                        }
-                }
             }
             else {
                 tetris.repaint();
@@ -208,6 +163,8 @@ class View {
         protected void paintComponent (Graphics g){
             super.paintComponent(g);
             Graphics2D graphics2D = (Graphics2D) g;
+            setPreferredSize(new Dimension((tetrisFrame.getHeight()-50)/20, (tetrisFrame.getHeight()-50)/20));
+            blocksize = (tetrisFrame.getHeight()-50)/20;
             Integer[][] shape = model.nextPiece.turn(-1);
             for (int i=0; i<4; i++)
                 for (int j=0; j<4; j++)

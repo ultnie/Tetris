@@ -7,10 +7,8 @@ import static java.lang.System.exit;
 
 class Menu {
     Tetris tetris = new Tetris();
-    Highscores highscores = new Highscores();
 
     void menu() {
-        highscores.readCSV();
         JFrame frame = new JFrame("Tetris Menu");
         frame.setPreferredSize(new Dimension(300, 400));
         frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
@@ -32,30 +30,6 @@ class Menu {
                 "Made by Maseevsky Anton as a student task");
         aboutFrame.add(aboutTextArea);
 
-        JFrame highscoresFrame = new JFrame("Highscores");
-        highscoresFrame.setSize(450, 550);
-        highscoresFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-        JPanel highscoresPanel = new JPanel();
-        highscoresPanel.setLayout(new BoxLayout(highscoresPanel, BoxLayout.Y_AXIS));
-        highscoresPanel.setFocusable(false);
-        highscoresPanel.setSize(450,550);
-        JTextArea highscoresTextArea = new JTextArea();
-        highscoresTextArea.setFont(new Font ("monospaced", Font.BOLD, 16));
-        for (int i = 0; i < highscores.records.size(); i++) {
-            if (i<9)
-                highscoresTextArea.append((i+1)+".  "+highscores.records.get(i).getValue()
-                        +" ".repeat(11-highscores.records.get(i).getValue().length())
-                        +highscores.records.get(i).getKey()+"\n");
-            else {
-                highscoresTextArea.append((i + 1) + ". " + highscores.records.get(i).getValue()
-                        + " ".repeat(11 - highscores.records.get(i).getValue().length())
-                        + highscores.records.get(i).getKey());
-            }
-        }
-
-        highscoresFrame.add(highscoresTextArea);
-
-
         JPanel menupanel = new JPanel();
         menupanel.setPreferredSize(new Dimension(200, 300));
 
@@ -64,7 +38,6 @@ class Menu {
         start.addActionListener(actionEvent -> {
             tetris.start();
             frame.setVisible(false);
-            highscoresFrame.setVisible(false);
             aboutFrame.setVisible(false);
         });
 
@@ -82,12 +55,6 @@ class Menu {
             catch (Exception e){}
         });
 
-        JButton highscores = new JButton("Highscores");
-        highscores.setPreferredSize(new Dimension(200, 50));
-        highscores.addActionListener(actionEvent -> {
-            highscoresFrame.setVisible(true);
-        });
-
         JButton about = new JButton( ("About"));
         about.setPreferredSize(new Dimension(200, 50));
         about.addActionListener(actionEvent -> {
@@ -100,7 +67,6 @@ class Menu {
 
         menupanel.add(start);
         menupanel.add(setlevel);
-        menupanel.add(highscores);
         menupanel.add(about);
         menupanel.add(exit);
 

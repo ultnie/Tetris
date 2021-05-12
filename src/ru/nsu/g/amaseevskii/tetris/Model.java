@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.LinkedList;
-import java.util.Map;
 
 import static java.lang.Math.*;
 
@@ -17,7 +16,6 @@ class Model {
     LinkedList<Color[]> coloredboard;
     private LinkedList<Color[]> boarddata;
     private LinkedList<Color[]> prev_boarddata;
-    Highscores highscores;
     String nickname;
     private boolean gameOver;
     private Timer stepTimer = null;
@@ -33,7 +31,6 @@ class Model {
     private int nextGoal;
     private boolean paused;
     private boolean internalpause;
-    boolean highscoreset;
     private final int[] delay = {800, 717, 633, 550, 467, 383, 300, 217, 133, 100, 83, 83, 83, 67, 67, 67, 50, 50, 50, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 17};
     private final Position spawn = new Position(3, 0);
     Tetromino nextPiece;
@@ -48,7 +45,6 @@ class Model {
         super();
         coloredboard = new LinkedList<>();
         boarddata = new LinkedList<>();
-        highscores = new Highscores();
         for (int i = 0; i < height; i++)
             coloredboard.add(new Color[wight]);
         gameOver = false;
@@ -58,8 +54,6 @@ class Model {
         level = startlevel - 1;
         counter = 0;
         score = 0;
-        highscores.records.clear();
-        highscores.readCSV();
         goal = min(level * 10 + 10, max(100, 10 * level - 50));
         nextGoal = goal + 10;
         coloredboard.clear();
@@ -70,7 +64,6 @@ class Model {
 
         gameOver = false;
         paused = false;
-        highscoreset = false;
         nickname = null;
 
         ids = tetrisRNG.getSequence();
@@ -111,49 +104,15 @@ class Model {
             if (!(gameOver = isGameOver())) {
                 movablePiece = new MovableTetromino(nextPiece, spawn);
                 id = nextid;
-                if (ids.size() == 0)
+                if (ids.size() == 0) {
                     ids = tetrisRNG.getSequence();
+                }
                 nextid = ids.getFirst();
                 ids.removeFirst();
                 nextPiece = factory.getTetromino(nextid);
 
-            } else {
-                stepTimer.stop();
-                if (highscores.records.size() < 10) {
-                    for (int i = 0; i < highscores.records.size(); i++)
-                        if (score > highscores.records.get(i).getKey()) {
-                            highscoreset = true;
-                            getBoardData();
-                            if (nickname != null) {
-                                highscores.records.add(i, Map.entry(score, nickname));
-                                highscores.makeCSV();
-                            }
-                            break;
-                        }
-                    if (!highscoreset) {
-                        highscoreset = true;
-                        getBoardData();
-                        if (nickname != null) {
-                            highscores.records.add(Map.entry(score, nickname));
-                            highscores.makeCSV();
-                        }
-                    }
-                }
-                else {
-                    for (int i = 0; i < 10; i++)
-                        if (score > highscores.records.get(i).getKey()) {
-                            highscoreset = true;
-                            getBoardData();
-                            if (nickname != null) {
-                                highscores.records.add(i, Map.entry(score, nickname));
-                                highscores.makeCSV();
-                            }
-                            break;
-                        }
-                }
-            }
+            } else stepTimer.stop();
         }
-        highscoreset = false;
         getBoardData();
     }
 
