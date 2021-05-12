@@ -156,6 +156,8 @@ class View {
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             Graphics2D graphics2D = (Graphics2D) g;
+			setPreferredSize(new Dimension ((tetrisFrame.getHeight()-50)/2, tetrisFrame.getHeight()-50));
+            blocksize = (tetrisFrame.getHeight()-50)/20;
             for (int i = 0; i < board.size(); i++) {
                 for (int j = 0; j < board.get(i).length; j++) {
                     graphics2D.setColor(Color.black);
@@ -208,6 +210,8 @@ class View {
         protected void paintComponent (Graphics g){
             super.paintComponent(g);
             Graphics2D graphics2D = (Graphics2D) g;
+			setPreferredSize(new Dimension((tetrisFrame.getHeight()-50)/20, (tetrisFrame.getHeight()-50)/20));
+            blocksize = (tetrisFrame.getHeight()-50)/20;
             Integer[][] shape = model.nextPiece.turn(-1);
             for (int i=0; i<4; i++)
                 for (int j=0; j<4; j++)
